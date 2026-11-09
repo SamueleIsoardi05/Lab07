@@ -1,6 +1,5 @@
 import flet as ft
 from UI.alert import AlertManager
-
 '''
     VIEW:
     - Rappresenta l'interfaccia utente
@@ -37,9 +36,24 @@ class View:
 
         # --- Sezione 2: Filtraggio ---
         # TODO
+        self.dd_biblioteche = ft.Dropdown(label="Biblioteche",
+                                          width=350,
+                                          value="Nessun filtro",
+                                          on_select = self.controller.read_biblioteca)
+
+        self.dd_generi = ft.Dropdown(label="Generi",
+                                     width=200,
+                                     value= "Nessun filtro",
+                                     on_select=self.controller.read_genere
+                                     )
 
         # Sezione 3: Libri
         # TODO
+        self.btn_libri= ft.Button(content="Mostra Libri", on_click=self.controller.handle_mostra_libri)
+        self.lv_libri = ft.ListView(
+            expand=True,
+            spacing=10,
+            padding=10)
 
         # --- Toggle Tema ---
         self.toggle_cambia_tema = ft.Switch(label="Tema scuro", value=True, on_change=self.cambia_tema)
@@ -55,11 +69,24 @@ class View:
             # Sezione 2: Filtraggio
             # TODO
 
+            ft.Row(spacing= 40,
+                   controls=[self.dd_biblioteche, self.dd_generi],
+                   alignment = ft.MainAxisAlignment.CENTER),
+            ft.Divider(),
+            ft.Container(height=20),
             # Sezione 3: Libri
             # TODO
+            ft.Row(controls=[self.btn_libri], alignment = ft.MainAxisAlignment.CENTER),
+            ft.Container(height=20),
+            self.lv_libri
         )
 
         self.page.scroll = "adaptive"
+
+        if self.controller:
+            self.controller.popola_biblioteca()
+            self.controller.popola_generi()
+
         self.page.update()
 
     def cambia_tema(self, e):
